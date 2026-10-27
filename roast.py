@@ -1,11 +1,17 @@
 from dotenv import load_dotenv
+import streamlit as st
 import os
 from langchain_groq import ChatGroq
 from pypdf import PdfReader
 from pathlib import Path
 
 load_dotenv()
-
+GROQ_API_KEY = (
+    os.getenv("GROQ_API_KEY")
+    or st.secrets.get("GROQ_API_KEY")
+)
+if not GROQ_API_KEY:
+    raise ValueError("GROQ_API_KEY is missing.")
 
 
 llm = ChatGroq(
@@ -17,6 +23,7 @@ llm = ChatGroq(
     max_retries=2,
     # other params...
 )
+
 
 def load_pdf(file_path):
     reader = PdfReader(file_path)
